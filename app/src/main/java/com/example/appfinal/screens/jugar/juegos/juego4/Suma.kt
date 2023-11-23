@@ -1,5 +1,7 @@
 package com.example.appfinal.screens.jugar.juegos.juego4
 
+import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.appfinal.R
+import com.example.appfinal.screens.jugar.juegos.audio
 
 @Composable
 fun Suma (navController: NavHostController, grupo: String) {
@@ -86,10 +90,16 @@ fun QuizGame() {
     var correctAnswer by remember { mutableStateOf(currentQuestion.correctAnswer) }
     var wrongAnswer by remember { mutableStateOf(currentQuestion.wrongAnswer) }
 
-    fun onAnswerSelected(selectedAnswer: Int) {
+    val context = LocalContext.current
+
+    val onAnswerSelected: (Int) -> Unit = { selectedAnswer ->
         if (selectedAnswer == currentQuestion.correctAnswer) {
+            audioCorrecto(context)
             score++
+        } else {
+            audioIncorrecto(context)
         }
+
         currentQuestion = generateQuestion()
         correctAnswer = currentQuestion.correctAnswer
         wrongAnswer = currentQuestion.wrongAnswer
@@ -210,4 +220,14 @@ fun generateQuestion(): Question {
         wrongAnswer += 1
     }
     return Question(num1, num2, correctAnswer, wrongAnswer)
+}
+
+fun audioCorrecto(context: Context) {
+    val mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.correcto)
+    mediaPlayer.start()
+}
+
+fun audioIncorrecto(context: Context) {
+    val mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.incorrecto)
+    mediaPlayer.start()
 }

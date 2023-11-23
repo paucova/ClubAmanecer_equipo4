@@ -1,5 +1,6 @@
 package com.example.appfinal.screens.jugar.juegos
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,6 +40,8 @@ import com.example.appfinal.R
 import com.example.appfinal.screens.jugar.juegos.juego4.DraggableImage3
 import com.example.appfinal.screens.jugar.juegos.juego4.generateImages3
 import kotlin.math.roundToInt
+import android.media.MediaPlayer
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun Juego3(navController: NavHostController, grupo: String) {
@@ -374,18 +377,35 @@ private fun Drag() {
         }
     }
 
-
     if (color1String == coloresSeleccionados[0][1] && color2String == coloresSeleccionados[1][1] &&
         color3String == coloresSeleccionados[2][1]){
         Log.d("imagen", "Entro")
-        Box(modifier = Modifier.fillMaxSize()
+
+        // Llamar a la función audio para reproducir el sonido
+        audio(LocalContext.current)
+
+        Box(
+            //modifier = Modifier.fillMaxSize()
         ){
             Image(painter = painterResource(id = R.drawable.ganaste),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(800.dp)
-                    .align(Alignment.Center)
+                    //.size(800.dp)
+                    //.align(Alignment.Center)
+                    .fillMaxSize()
             )
         }
+    }
+}
+
+@Composable
+fun audio(context: Context) {
+    var audioPlayed by remember { mutableStateOf(false) }
+    val mediaPlayer: MediaPlayer = remember { MediaPlayer.create(context, R.raw.yay) }
+
+    // Verificar si el sonido ya se reprodujo para evitar la repetición continua
+    if (!audioPlayed) {
+        mediaPlayer.start()
+        audioPlayed = true
     }
 }

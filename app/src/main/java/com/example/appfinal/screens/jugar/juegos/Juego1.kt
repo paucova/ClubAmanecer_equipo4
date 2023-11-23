@@ -2,6 +2,7 @@ package com.example.appfinal.screens.jugar.juegos
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.media.MediaPlayer
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,12 +31,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.appfinal.R
 import com.example.appfinal.screens.aprender.viewImages.processTTS
+import com.example.appfinal.screens.jugar.juegos.juego4.audioCorrecto
 import com.example.appfinal.viewModel.TarjetasViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -56,6 +59,7 @@ fun Juego1(
     val bitmap: ImageBitmap? by remember(imagen) {
         mutableStateOf(getBitmap2(imagen.name, imagen.category, imagen.text, imagen.filePath, context))
     }
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -93,10 +97,10 @@ fun Juego1(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
                 Box(modifier = Modifier
                     .size(width = 500.dp, height = 500.dp)
                     .clickable {
+                        audioBurbuja(context)
                         visual = true
                         processTTS(context, imagen.text)
                         coroutineScope.launch {
@@ -105,23 +109,19 @@ fun Juego1(
                             imagen = tarjetasViewModel.images.value[Random.nextInt(tarjetasViewModel.images.value.size)]
                         }
                     }) {
-
                     Image(
                         painter = if (visual && bitmap != null && imagen.filePath == -1) BitmapPainter(
                             bitmap!!
                         ) else painterResource(id = if (visual) imagen.filePath else R.drawable.burbuja),
                         contentDescription = "Tarjeta",
                         modifier = Modifier.fillMaxSize()
-                            )}
-
+                    )
                 }
-            }
 
         }
+    }
 
-
-
-
+}
 
 fun getBitmap2(name: String, category: String?, text: String, filepath: Int, context: Context): ImageBitmap? {
     return try {
@@ -136,4 +136,9 @@ fun getBitmap2(name: String, category: String?, text: String, filepath: Int, con
         Log.d("ERROR", e.message.toString())
         null
     }
+}
+
+fun audioBurbuja(context: Context) {
+    val mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.burbuja)
+    mediaPlayer.start()
 }
