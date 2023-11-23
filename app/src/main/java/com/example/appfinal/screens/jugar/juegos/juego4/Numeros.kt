@@ -1,5 +1,6 @@
 package com.example.appfinal.screens.jugar.juegos.juego4
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,11 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.appfinal.R
 import com.example.appfinal.screens.home.noRippleClickable
 import com.example.appfinal.screens.jugar.juegos.audioBurbuja
 import kotlin.math.pow
@@ -94,6 +97,7 @@ fun Numeros(navController: NavHostController, grupo: String) {
         }
     }
 
+    // Lógica del juego
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -122,8 +126,7 @@ fun Numeros(navController: NavHostController, grupo: String) {
 data class DraggableImage3(
     val id: Int,
     var offset: IntOffset,
-    val color: Color,
-    val radius: Int,
+    val drawable: Int,
     var isVisible: Boolean = true,
     val number: Int
 )
@@ -131,8 +134,20 @@ data class DraggableImage3(
 fun addNewImages3(images: MutableList<DraggableImage3>, imageCount: Int, minDistance: Int) {
     images.clear()
 
-    val numbers = (1..imageCount).shuffled() // Lista de números aleatorios
-    val usedNumbers = mutableSetOf<Int>()
+    val drawableIds = mutableListOf(
+        R.drawable.burbuja_roja,
+        R.drawable.burbuja_rosa,
+        R.drawable.burbuja_morada,
+        R.drawable.burbuja_azul,
+        R.drawable.burbuja_cian,
+        R.drawable.burbuja_verde,
+        R.drawable.burbuja_bosque,
+        R.drawable.burbuja_amarilla,
+        R.drawable.burbuja_naranja,
+        R.drawable.burbuja_negra
+    )
+
+    val usedDrawables = mutableSetOf<Int>()
 
     for (id in 1..imageCount) {
         var xOffset: Int
@@ -150,18 +165,23 @@ fun addNewImages3(images: MutableList<DraggableImage3>, imageCount: Int, minDist
             }
         } while (tooClose)
 
-        val color = Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat(), 1f)
-        val radius = Random.nextInt(150, 200)
+        val availableDrawables = drawableIds.filter { it !in usedDrawables }
+        if (availableDrawables.isEmpty()) {
+            // Si ya se han utilizado todas las imágenes, reinicia el conjunto
+            usedDrawables.clear()
+            drawableIds.shuffle()
+        }
 
-        val number = numbers.first { it !in usedNumbers } // Obtener el próximo número no utilizado
-        usedNumbers.add(number)
+        val drawable = availableDrawables.random()
+
+        val number = id
+        usedDrawables.add(drawable)
 
         images.add(
             DraggableImage3(
                 id = id,
                 offset = IntOffset(xOffset, yOffset),
-                color = color,
-                radius = radius,
+                drawable = drawable,
                 isVisible = true,
                 number = number
             )
@@ -176,21 +196,27 @@ fun DraggableImage3(image: DraggableImage3, onDeleteClick: () -> Unit) {
     Box(
         modifier = Modifier
             .offset { image.offset }
-            .size(image.radius.dp)
+            .size(200.dp) // Tamaño fijo para las imágenes
             .fillMaxSize()
-            .background(color = image.color, shape = CircleShape)
             .noRippleClickable {
                 image.isVisible = !image.isVisible
                 audioBurbuja(context)
                 onDeleteClick()
             }
     ) {
-        // Agrega el contenido de la imagen aquí, si es necesario
+        // Mostrar la imagen en lugar de texto
+        Image(
+            painter = painterResource(id = image.drawable),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
+
+        // Agregar el número sobre la imagen
         Text(
             text = image.number.toString(),
-            color = Color.White,
+            color = Color.Black,
             fontWeight = FontWeight.Bold,
-            fontSize = 100.sp,
+            fontSize = 65.sp,
             modifier = Modifier.align(Alignment.Center)
         )
     }
@@ -202,15 +228,25 @@ fun generateImages3(): MutableList<DraggableImage3> {
     for (id in 1..10) {
         val xOffset = Random.nextInt(100, 2000)
         val yOffset = Random.nextInt(100, 1000)
-        val color = Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat(), 1f)
-        val radius = Random.nextInt(150, 200)
+        val drawableIds = listOf(
+            R.drawable.burbuja_roja,
+            R.drawable.burbuja_rosa,
+            R.drawable.burbuja_morada,
+            R.drawable.burbuja_azul,
+            R.drawable.burbuja_cian,
+            R.drawable.burbuja_verde,
+            R.drawable.burbuja_bosque,
+            R.drawable.burbuja_amarilla,
+            R.drawable.burbuja_naranja,
+            R.drawable.burbuja_negra
+        )
+        val drawable = drawableIds.random()
 
         images.add(
             DraggableImage3(
                 id = id,
                 offset = IntOffset(xOffset, yOffset),
-                color = color,
-                radius = radius,
+                drawable = drawable,
                 number = id
             )
         )
