@@ -101,7 +101,7 @@ fun AgregarUsuario (navController: NavHostController) {
         Column {
             // Primera parte: Mensajes
             Column(
-                modifier = Modifier.offset(x = 215.dp, y = 100.dp)
+                modifier = Modifier.offset(x = 215.dp, y = 70.dp)
             ) {
                 Text(
                     text = "Agregar Usuario",
@@ -115,7 +115,7 @@ fun AgregarUsuario (navController: NavHostController) {
 
             // Segunda parte: Ingresar informacion
             Column(
-                modifier = Modifier.offset(x = 215.dp, y = 150.dp)
+                modifier = Modifier.offset(x = 215.dp, y = 120.dp)
             ) {
                 Text(text = "Usuario",
                     color = Color.White,
@@ -148,11 +148,10 @@ fun AgregarUsuario (navController: NavHostController) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 //*************
-
             }
 
             Column (
-                modifier = Modifier.offset(x = 215.dp, y = 145.dp)
+                modifier = Modifier.offset(x = 215.dp, y = 115.dp)
             ) {
                 Text(text = "Grupo",
                     color = Color.White,
@@ -164,9 +163,27 @@ fun AgregarUsuario (navController: NavHostController) {
 
             // Tercera parte: Botones
             Column(
-                modifier = Modifier.offset(x = 205.dp, y = 250.dp)
+                modifier = Modifier.offset(x = 205.dp, y = 170.dp)
             ) {
-                // Agregar Usuario
+                // Visualizar información
+                Box(
+                    modifier = Modifier
+                        .height(47.dp)
+                        .width(300.dp)
+                        .clickable {
+                            navController.navigate("VerInformacion")
+                        }
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ver_informacion),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Agregar usuario
                 Box(
                     modifier = Modifier
                         .height(47.dp)
@@ -188,7 +205,6 @@ fun AgregarUsuario (navController: NavHostController) {
             }
 
         }
-
 
     }
 

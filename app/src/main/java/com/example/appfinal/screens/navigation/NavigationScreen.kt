@@ -21,6 +21,7 @@ import com.example.appfinal.screens.jugar.juegos.juego4.Resta
 import com.example.appfinal.screens.jugar.juegos.juego4.Suma
 import com.example.appfinal.screens.login.AgregarUsuario
 import com.example.appfinal.screens.login.LoginScreen
+import com.example.appfinal.screens.login.VerInformacion
 import com.example.appfinal.screens.tarjetas.TarjetasScreen
 import com.example.appfinal.screens.tarjetas.borrarCategoria.BorrarCategoria
 import com.example.appfinal.screens.tarjetas.borrarTarjeta.BorrarTarjetaScreen
@@ -43,6 +44,11 @@ fun NavigationScreen(tarjetasViewModel: TarjetasViewModel, context: Context){
         // Agregar a un usuario
         composable("AgregarUsuario"){
             AgregarUsuario(navController)
+        }
+
+        // Ver información del usuario
+        composable("VerInformacion") {
+            VerInformacion(navController, context, tarjetasViewModel)
         }
 
         // Paginas dentro de HomeScreen

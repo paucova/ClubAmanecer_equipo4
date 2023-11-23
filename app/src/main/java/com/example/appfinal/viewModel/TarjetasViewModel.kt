@@ -82,4 +82,10 @@ class TarjetasViewModel(application: Application) : AndroidViewModel(application
     fun obtenerCategorias(): List<Categorias> {
         return categories.value
     }
+
+    fun borrarUsuario(user: User) {
+        viewModelScope.launch {
+            daoUsuario.borrarUsuario(user)
+        }
+    }
 }

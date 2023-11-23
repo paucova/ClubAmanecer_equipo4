@@ -46,4 +46,7 @@ interface UsersDao {
 
     @Query("SELECT * FROM Users WHERE nombre = :nombre AND contrasena = :contrasena")
     suspend fun encontrarUsuario(nombre: String, contrasena: String): User?
+
+    @Delete
+    suspend fun borrarUsuario(user: User)
 }
