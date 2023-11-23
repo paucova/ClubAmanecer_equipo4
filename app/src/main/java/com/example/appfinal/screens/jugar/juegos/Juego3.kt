@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -29,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource.Companion.Drag
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -55,43 +57,51 @@ fun Juego3(navController: NavHostController, grupo: String) {
             .background(color = azulClaro)
     ) {
         // Botón de regreso a HomeScreen
-
-
-        Column (
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Button(
-                onClick = {
-                    navController.navigate("JugarScreen/$grupo") {
-                        popUpTo("JugarScreen/$grupo") {
-                            inclusive = true
+        Column{
+            Row {
+                Button(
+                    onClick = {
+                        navController.navigate("JugarScreen/$grupo") {
+                            popUpTo("JugarScreen/$grupo") {
+                                inclusive = true
+                            }
                         }
-                    }
-                },
-                modifier = Modifier
-                    .padding(8.dp),
-                contentPadding = PaddingValues(8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = null,
-                    tint = Color.White
-                )
-
-                Text(
-                    text = "Regresar",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold)
-            }
-                Surface(
-                    modifier = Modifier.size(2000.dp, 1500.dp)
-                        .background(color = azulClaro),
-                    color = MaterialTheme.colorScheme.background
+                    },
+                    modifier = Modifier
+                        .padding(8.dp),
+                    contentPadding = PaddingValues(8.dp)
                 ) {
-                    Drag()
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+
+                    Text(
+                        text = "Regresar",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
+            }
+
+            Row {
+                Column (
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Surface(
+                        modifier = Modifier
+                            .size(2000.dp, 1500.dp)
+                            .background(color = azulClaro),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        Drag()
+                    }
+                }
+            }
+
         }
     }
 }
@@ -131,7 +141,9 @@ private fun Drag() {
         coloresSeleccionados.shuffled().take(3)
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(color = azulClaro)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(color = azulClaro)) {
         var color1OffsetX by remember { mutableStateOf(0f) }
         var color1OffsetY by remember { mutableStateOf(0f) }
 
@@ -195,8 +207,9 @@ private fun Drag() {
                 }
             }
             Row(horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.height(100.dp)){
+                modifier = Modifier.height(60.dp)){
             }
+
             Row {
                 val color1 = colores_nuevos[0]
                 val color2 = colores_nuevos[1]
@@ -371,7 +384,8 @@ private fun Drag() {
         ){
             Image(painter = painterResource(id = R.drawable.ganaste),
                 contentDescription = null,
-                modifier = Modifier.size(800.dp)
+                modifier = Modifier
+                    .size(800.dp)
                     .align(Alignment.Center)
             )
         }
