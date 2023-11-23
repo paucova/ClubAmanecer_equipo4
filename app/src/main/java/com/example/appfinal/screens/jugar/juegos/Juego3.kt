@@ -1,5 +1,6 @@
 package com.example.appfinal.screens.jugar.juegos
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,18 +37,13 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.appfinal.R
-import com.example.appfinal.screens.jugar.juegos.juego4.DraggableImage3
-import com.example.appfinal.screens.jugar.juegos.juego4.generateImages3
 import kotlin.math.roundToInt
+import android.media.MediaPlayer
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun Juego3(navController: NavHostController, grupo: String) {
     val azulClaro = Color(173, 216, 230)
-    var images by remember { mutableStateOf(generateImages3()) }
-    var visibleImages by remember { mutableStateOf(listOf<DraggableImage3>()) }
-    var deletedImages by remember { mutableStateOf(mutableListOf<DraggableImage3>()) }
-    var deletedImageCount by remember { mutableStateOf(0) }
-    var currentNumber by remember { mutableStateOf(1) }
 
     Box(
         modifier = Modifier
@@ -55,43 +51,51 @@ fun Juego3(navController: NavHostController, grupo: String) {
             .background(color = azulClaro)
     ) {
         // Botón de regreso a HomeScreen
-
-
-        Column (
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Button(
-                onClick = {
-                    navController.navigate("JugarScreen/$grupo") {
-                        popUpTo("JugarScreen/$grupo") {
-                            inclusive = true
+        Column{
+            Row {
+                Button(
+                    onClick = {
+                        navController.navigate("JugarScreen/$grupo") {
+                            popUpTo("JugarScreen/$grupo") {
+                                inclusive = true
+                            }
                         }
-                    }
-                },
-                modifier = Modifier
-                    .padding(8.dp),
-                contentPadding = PaddingValues(8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = null,
-                    tint = Color.White
-                )
-
-                Text(
-                    text = "Regresar",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold)
-            }
-                Surface(
-                    modifier = Modifier.size(2000.dp, 1500.dp)
-                        .background(color = azulClaro),
-                    color = MaterialTheme.colorScheme.background
+                    },
+                    modifier = Modifier
+                        .padding(8.dp),
+                    contentPadding = PaddingValues(8.dp)
                 ) {
-                    Drag()
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+
+                    Text(
+                        text = "Regresar",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
+            }
+
+            Row {
+                Column (
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Surface(
+                        modifier = Modifier
+                            .size(2000.dp, 1500.dp)
+                            .background(color = azulClaro),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        Drag()
+                    }
+                }
+            }
+
         }
     }
 }
@@ -131,7 +135,9 @@ private fun Drag() {
         coloresSeleccionados.shuffled().take(3)
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(color = azulClaro)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(color = azulClaro)) {
         var color1OffsetX by remember { mutableStateOf(0f) }
         var color1OffsetY by remember { mutableStateOf(0f) }
 
@@ -195,8 +201,9 @@ private fun Drag() {
                 }
             }
             Row(horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.height(100.dp)){
+                modifier = Modifier.height(60.dp)){
             }
+
             Row {
                 val color1 = colores_nuevos[0]
                 val color2 = colores_nuevos[1]
@@ -363,17 +370,35 @@ private fun Drag() {
         }
     }
 
-
     if (color1String == coloresSeleccionados[0][1] && color2String == coloresSeleccionados[1][1] &&
         color3String == coloresSeleccionados[2][1]){
         Log.d("imagen", "Entro")
-        Box(modifier = Modifier.fillMaxSize()
+
+        // Llamar a la función audio para reproducir el sonido
+        audioYay(LocalContext.current)
+
+        Box(
+            //modifier = Modifier.fillMaxSize()
         ){
             Image(painter = painterResource(id = R.drawable.ganaste),
                 contentDescription = null,
-                modifier = Modifier.size(800.dp)
-                    .align(Alignment.Center)
+                modifier = Modifier
+                    //.size(800.dp)
+                    //.align(Alignment.Center)
+                    .fillMaxSize()
             )
         }
+    }
+}
+
+@Composable
+fun audioYay(context: Context) {
+    var audioPlayed by remember { mutableStateOf(false) }
+    val mediaPlayer: MediaPlayer = remember { MediaPlayer.create(context, R.raw.yay) }
+
+    // Verificar si el sonido ya se reprodujo para evitar la repetición continua
+    if (!audioPlayed) {
+        mediaPlayer.start()
+        audioPlayed = true
     }
 }

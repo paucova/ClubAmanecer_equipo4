@@ -1,16 +1,15 @@
 package com.example.appfinal.staticElements
 
-import android.content.Context
-import android.widget.Button
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.appfinal.R
 import com.example.appfinal.viewModel.TarjetasViewModel
@@ -18,11 +17,22 @@ import com.example.appfinal.viewModel.TarjetasViewModel
 @Composable
 fun LoadImages() {
     val imagesViewModel: TarjetasViewModel = viewModel()
-    // cargar tarjetas de categoría "animales"
-    Column {
+    Column (
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Box(
+            modifier = Modifier.clickable {
+            // Categorías
+            imagesViewModel.nuevaCategoria("animales")
+            imagesViewModel.nuevaCategoria("colores")
+            imagesViewModel.nuevaCategoria("cuerpo")
+            imagesViewModel.nuevaCategoria("emociones")
+            imagesViewModel.nuevaCategoria("profesiones")
+            imagesViewModel.nuevaCategoria("vestimenta")
 
-
-        Button( onClick= {
+            // Imagenes
             imagesViewModel.saveImageReference(
                 R.drawable.abeja.toString(),
                 "animales",
@@ -739,29 +749,11 @@ fun LoadImages() {
         }
         )
         {
-            Text(
-                text = "Agregar Imágenes",
-                color = Color.White,
-                fontWeight = FontWeight.Bold)
-        }
-
-        Button(onClick = {
-            imagesViewModel.nuevaCategoria("animales")
-            imagesViewModel.nuevaCategoria("colores")
-            imagesViewModel.nuevaCategoria("cuerpo")
-            imagesViewModel.nuevaCategoria("emociones")
-            imagesViewModel.nuevaCategoria("profesiones")
-            imagesViewModel.nuevaCategoria("vestimenta")
-        }) {
-            Text(
-                text = "Agregar Categorías",
-                color = Color.White,
-                fontWeight = FontWeight.Bold)
+            Image(
+                painter = painterResource(id = R.drawable.precargar_info),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
-
-
-
-
-

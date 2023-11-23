@@ -72,4 +72,20 @@ class TarjetasViewModel(application: Application) : AndroidViewModel(application
             daoImagenes.deleteImage(image)
         }
     }
+
+    fun deleteCategoryByName(name: String) {
+        viewModelScope.launch {
+            daoCategorias.deleteCategoryByName(name)
+        }
+    }
+
+    fun obtenerCategorias(): List<Categorias> {
+        return categories.value
+    }
+
+    fun borrarUsuario(user: User) {
+        viewModelScope.launch {
+            daoUsuario.borrarUsuario(user)
+        }
+    }
 }

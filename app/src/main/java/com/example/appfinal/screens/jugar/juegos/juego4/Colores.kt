@@ -14,11 +14,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -26,6 +28,8 @@ import androidx.navigation.NavHostController
 
 import kotlin.math.sqrt
 import com.example.appfinal.screens.home.noRippleClickable
+import com.example.appfinal.screens.jugar.juegos.audioBurbuja
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 @Composable
@@ -39,6 +43,8 @@ fun Colores(navController: NavHostController, grupo: String) {
     val deletedImages = remember { mutableStateOf(mutableListOf<DraggableImage2>()) }
     val deletedImageCount = remember { mutableStateOf(0) }
     val colorObjetivo = remember { mutableStateOf(generateRandomColor(images.value)) } // Color que se debe eliminar
+
+    val context = LocalContext.current
 
     fun selectNewColorObjective() {
         if (images.value.isNotEmpty()) {
@@ -107,20 +113,31 @@ fun Colores(navController: NavHostController, grupo: String) {
                 .size(70.dp)
         )
 
+        // Lógica del juego
         val visibleImages = images.value.filter { it.isVisible }
         if (visibleImages.isNotEmpty()) {
             visibleImages.forEach { image ->
                 DraggableImage2(image = image, colorObjetivo = colorObjetivo.value) {
                     if (image.color == colorObjetivo.value) {
                         onCircleDeleted(image)
+                        audioBurbuja(context)
                     }
+
+                    if (visibleImages.isEmpty()){
+                        // Llamar a la función audio para reproducir el sonido
+                        audioYay2(context)
+                    }
+
                 }
             }
         } else {
-            // No quedan círculos visibles, genera nuevos círculos
-            val randomImageCount = Random.nextInt(1, 11)
-            images.value = generateImages2(minDistanceBetweenCircles)
-            selectNewColorObjective()
+            LaunchedEffect(Unit) {
+                delay(1500)
+                // No quedan círculos visibles, genera nuevos círculos
+                val randomImageCount = Random.nextInt(1, 11)
+                images.value = generateImages2(minDistanceBetweenCircles)
+                selectNewColorObjective()
+            }
         }
     }
 }

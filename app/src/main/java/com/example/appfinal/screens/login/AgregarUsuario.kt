@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -41,6 +43,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
@@ -49,24 +53,17 @@ import androidx.navigation.NavHostController
 import com.example.appfinal.R
 import com.example.appfinal.viewModel.TarjetasViewModel
 
-
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 
 @Composable
 fun AgregarUsuario (navController: NavHostController) {
-
+    // Variables
     val tarjetasViewModel: TarjetasViewModel = viewModel()
-
-    val nombre = remember {
-        mutableStateOf("")
-    }
-
-    val password = remember {
-        mutableStateOf("")
-    }
-
-    var grupo = remember {
-        mutableStateOf("1")
-    }
+    var nombre = remember { mutableStateOf("") }
+    var password = remember { mutableStateOf("") }
+    var isPasswordVisible by remember { mutableStateOf(false) }
+    var grupo = remember { mutableStateOf("") }
 
     // Box para poner imagen de fondo
     Box(
@@ -110,7 +107,7 @@ fun AgregarUsuario (navController: NavHostController) {
         Column {
             // Primera parte: Mensajes
             Column(
-                modifier = Modifier.offset(x = 215.dp, y = 100.dp)
+                modifier = Modifier.offset(x = 215.dp, y = 70.dp)
             ) {
                 Text(
                     text = "Agregar Usuario",
@@ -124,7 +121,7 @@ fun AgregarUsuario (navController: NavHostController) {
 
             // Segunda parte: Ingresar informacion
             Column(
-                modifier = Modifier.offset(x = 215.dp, y = 150.dp)
+                modifier = Modifier.offset(x = 215.dp, y = 120.dp)
             ) {
                 Text(text = "Usuario",
                     color = Color.White,
@@ -142,35 +139,88 @@ fun AgregarUsuario (navController: NavHostController) {
                     color = Color.White,
                     fontSize = 15.sp)
 
-                TextField(
-                    value = password.value,
-                    onValueChange = {
-                        password.value = it
-                    },
-                    placeholder = {
-                        Text("Contraseña")
-                    },
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password)
-                )
+                Row {
+                    TextField(
+                        value = password.value,
+                        onValueChange = {
+                            password.value = it
+                        },
+                        placeholder = {
+                            Text("Contraseña")
+                        },
+                        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
+                        modifier = Modifier
+                            .height(60.dp)
+                            .width(280.dp)
+                    )
+
+                    IconButton(
+                        onClick = {
+                            isPasswordVisible = !isPasswordVisible
+                        },
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Icon(
+                            if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            contentDescription = "Toggle password visibility",
+                            tint = Color.White
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 //*************
-
             }
+
+            Column (
+                modifier = Modifier.offset(x = 215.dp, y = 115.dp)
+            ) {
+                Text(text = "Grupo",
+                    color = Color.White,
+                    fontSize = 15.sp)
+
+                dropDownMenu(grupo = grupo.value, changeValueGrupo = { newGrupo ->
+                    grupo.value = newGrupo})
+            }
+
             // Tercera parte: Botones
             Column(
-                modifier = Modifier.offset(x = 205.dp, y = 270.dp)
+                modifier = Modifier.offset(x = 205.dp, y = 170.dp)
             ) {
-                // Agregar Usuario
+                // Visualizar información
                 Box(
                     modifier = Modifier
                         .height(47.dp)
                         .width(300.dp)
                         .clickable {
-                            tarjetasViewModel.agregarUsuario(nombre.value, password.value, grupo.value)
-                            navController.navigate("LoginScreen")
+                            navController.navigate("VerInformacion")
+                        }
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ver_informacion),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Agregar usuario
+                Box(
+                    modifier = Modifier
+                        .height(47.dp)
+                        .width(300.dp)
+                        .clickable {
+                            tarjetasViewModel.agregarUsuario(
+                                nombre.value,
+                                password.value,
+                                grupo.value
+                            )
+                            nombre.value = ""
+                            password.value = ""
+                            grupo.value = ""
                         }
                 ) {
                     Image(
@@ -181,19 +231,8 @@ fun AgregarUsuario (navController: NavHostController) {
                 }
 
             }
-            Column (
-                modifier = Modifier.offset(x = 215.dp, y = 100.dp)
-            ) {
-                Text(text = "Grupo",
-                    color = Color.White,
-                    fontSize = 15.sp)
-
-                dropDownMenu(grupo = grupo.value, changeValueGrupo = { newGrupo ->
-                    grupo.value = newGrupo})
-            }
 
         }
-
 
     }
 
@@ -201,7 +240,6 @@ fun AgregarUsuario (navController: NavHostController) {
 
 @Composable
 fun dropDownMenu(grupo: String, changeValueGrupo: (String) -> Unit) {
-
     var expanded by remember { mutableStateOf(false) }
     val list = listOf("1", "2", "3", "4")
 

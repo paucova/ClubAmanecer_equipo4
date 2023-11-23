@@ -21,16 +21,16 @@ import com.example.appfinal.screens.jugar.juegos.juego4.Resta
 import com.example.appfinal.screens.jugar.juegos.juego4.Suma
 import com.example.appfinal.screens.login.AgregarUsuario
 import com.example.appfinal.screens.login.LoginScreen
+import com.example.appfinal.screens.login.VerInformacion
 import com.example.appfinal.screens.tarjetas.TarjetasScreen
+import com.example.appfinal.screens.tarjetas.borrarCategoria.BorrarCategoria
 import com.example.appfinal.screens.tarjetas.borrarTarjeta.BorrarTarjetaScreen
 import com.example.appfinal.screens.tarjetas.nuevaCategoria.AgregarCategoriaScreen
 import com.example.appfinal.screens.tarjetas.nuevaTarjeta.AgregarTarjetaScreen
-import com.example.appfinal.screens.tarjetas.precargarElementos.PrecargarTarjetasScreen
 import com.example.appfinal.viewModel.TarjetasViewModel
 
 @Composable
 fun NavigationScreen(tarjetasViewModel: TarjetasViewModel, context: Context){
-
     // #1  Crear el objeto de NavController
     val navController = rememberNavController()
 
@@ -44,6 +44,11 @@ fun NavigationScreen(tarjetasViewModel: TarjetasViewModel, context: Context){
         // Agregar a un usuario
         composable("AgregarUsuario"){
             AgregarUsuario(navController)
+        }
+
+        // Ver información del usuario
+        composable("VerInformacion") {
+            VerInformacion(navController, context, tarjetasViewModel)
         }
 
         // Paginas dentro de HomeScreen
@@ -120,10 +125,10 @@ fun NavigationScreen(tarjetasViewModel: TarjetasViewModel, context: Context){
             }
         }
 
-        composable("PrecargarTarjetasScreen/{grupo}") {
+        composable("BorrarCategoriaScreen/{grupo}") {
             val grupo = it.arguments?.getString("grupo")
             if (grupo != null) {
-                PrecargarTarjetasScreen(navController, grupo)
+                BorrarCategoria(navController, context, grupo)
             }
         }
 

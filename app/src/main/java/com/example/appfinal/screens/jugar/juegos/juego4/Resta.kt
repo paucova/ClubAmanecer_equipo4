@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -87,16 +88,22 @@ fun QuizGame2() {
     var correctAnswer2 by remember { mutableStateOf(currentQuestion2.correctAnswer2) }
     var wrongAnswer2 by remember { mutableStateOf(currentQuestion2.wrongAnswer2) }
 
-    fun onAnswerSelected2(selectedAnswer2: Int) {
-        if (selectedAnswer2 == currentQuestion2.correctAnswer2) {
+    val context2 = LocalContext.current
+
+    val onAnswerSelected2: (Int) -> Unit = { selectedAnswer ->
+        if (selectedAnswer == currentQuestion2.correctAnswer2) {
+            audioCorrecto(context2)
             score2++
+        } else {
+            audioIncorrecto(context2)
         }
+
         currentQuestion2 = generateQuestion2()
         correctAnswer2 = currentQuestion2.correctAnswer2
         wrongAnswer2 = currentQuestion2.wrongAnswer2
     }
 
-    val swap = (0..1).random() == 1
+    val swap2 = (0..1).random() == 1
 
     // Columna para que se separe
     Column {
@@ -129,7 +136,7 @@ fun QuizGame2() {
         }
 
         // Botones con opciones
-        if (swap) {
+        if (swap2) {
             Column (
                 modifier = Modifier.offset(x = 295.dp, y = 120.dp)
             ) {

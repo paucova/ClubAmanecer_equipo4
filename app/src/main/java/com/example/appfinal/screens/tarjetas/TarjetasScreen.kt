@@ -131,7 +131,7 @@ fun TarjetasScreen(navController: NavHostController, grupo: String) {
                         modifier = Modifier
                             .size(400.dp) // Ajusta el tamaño del botón según sea necesario
                             .clickable {
-                                navController.navigate("PrecargarTarjetasScreen/$grupo")
+                                navController.navigate("BorrarCategoriaScreen/$grupo")
                             }
                     ) {
                         Image(
@@ -143,6 +143,5 @@ fun TarjetasScreen(navController: NavHostController, grupo: String) {
                 }
             }
         }
-
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,8 +14,13 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -30,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -42,26 +49,12 @@ fun LoginScreen (navController: NavHostController){
     val tarjetasViewModel: TarjetasViewModel = viewModel()
     val userState by tarjetasViewModel.userState.collectAsState()
 
-    val nombre = remember {
-        mutableStateOf("pau")
-    }
-
-    val password = remember {
-        mutableStateOf("hola")
-    }
-
-    val enteredPassword = remember {
-        mutableStateOf("")
-    }
-
-    val isPasswordCorrect = remember {
-        mutableStateOf(false)
-    }
-
-    var isDialogVisible by remember {
-        mutableStateOf(false)
-    }
-
+    val nombre = remember { mutableStateOf("pau") }
+    val password = remember { mutableStateOf("hola") }
+    var isPasswordVisible by remember { mutableStateOf(false) }
+    val enteredPassword = remember { mutableStateOf("") }
+    val isPasswordCorrect = remember { mutableStateOf(false) }
+    var isDialogVisible by remember { mutableStateOf(false) }
 
     // Box para poner imagen de fondo
     Box(
@@ -111,17 +104,35 @@ fun LoginScreen (navController: NavHostController){
                     color = Color.White,
                     fontSize = 15.sp)
 
-                TextField(
-                    value = password.value,
-                    onValueChange = {
-                        password.value = it
-                    },
-                    placeholder = {
-                        Text("Contraseña")
-                    },
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password)
-                )
+                Row {
+                    TextField(
+                        value = password.value,
+                        onValueChange = {
+                            password.value = it
+                        },
+                        placeholder = {
+                            Text("Contraseña")
+                        },
+                        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
+                        modifier = Modifier
+                            .height(60.dp)
+                            .width(280.dp)
+                    )
+
+                    IconButton(
+                        onClick = {
+                            isPasswordVisible = !isPasswordVisible
+                        },
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Icon(
+                            if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            contentDescription = "Toggle password visibility",
+                            tint = Color.White
+                        )
+                    }
+                }
             }
 
             // Tercera parte: Botones
@@ -140,9 +151,7 @@ fun LoginScreen (navController: NavHostController){
                                 navController.navigate("HomeScreen/${userState!!.grupo}")
                             }
                         }
-
                 ) {
-
                     Image(
                         painter = painterResource(id = R.drawable.iniciar_sesion),
                         contentDescription = null,
