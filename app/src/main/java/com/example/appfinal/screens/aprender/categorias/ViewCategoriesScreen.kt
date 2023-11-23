@@ -34,7 +34,6 @@ fun ViewCategoriesScreen(
 ) {
     val categories = tarjetasViewModel.categories.value
 
-
     LazyColumn {
         // Dividir la lista en grupos de tres
         items(categories.chunked(3)) { rowCategories ->

@@ -30,6 +30,8 @@ import com.example.appfinal.screens.home.noRippleClickable
 
 @Composable
 fun JugarScreen (navController: NavHostController, grupo: String) {
+    val grupoNum = grupo?.toInt()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -106,14 +108,21 @@ fun JugarScreen (navController: NavHostController, grupo: String) {
                         modifier = Modifier
                             .size(400.dp) // Ajusta el tamaño del botón según sea necesario
                             .noRippleClickable {
-                                navController.navigate("Juego2/$grupo")
+                                if (grupoNum != null) {
+                                    if (grupoNum > 1) {
+                                        navController.navigate("Juego2/$grupo")
+                                    }
+                                }
                             }
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.burbuja_2),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize()
-                        )
+
+                        if (grupoNum != null) {
+                            Image(
+                                painter = painterResource(id = if (grupoNum > 1) R.drawable.burbuja_2 else R.drawable.burbuja_2no),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
 
                         Text(text = "Reventar burbujas",
                             color = Color.White,
@@ -132,14 +141,20 @@ fun JugarScreen (navController: NavHostController, grupo: String) {
                         modifier = Modifier
                             .size(400.dp) // Ajusta el tamaño del botón según sea necesario
                             .noRippleClickable {
-                                navController.navigate("Juego3/$grupo")
+                                if (grupoNum != null) {
+                                    if (grupoNum > 2) {
+                                        navController.navigate("Juego3/$grupo")
+                                    }
+                                }
                             }
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.burbuja_3),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        if (grupoNum != null) {
+                            Image(
+                                painter = painterResource(id = if (grupoNum > 2) R.drawable.burbuja_3 else R.drawable.burbuja_3no),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
 
                         Text(text = "Colorear peces",
                             color = Color.White,
@@ -155,14 +170,20 @@ fun JugarScreen (navController: NavHostController, grupo: String) {
                         modifier = Modifier
                             .size(400.dp) // Ajusta el tamaño del botón según sea necesario
                             .noRippleClickable {
-                                navController.navigate("Juego4Screen/$grupo")
+                                if (grupoNum != null) {
+                                    if (grupoNum > 3) {
+                                        navController.navigate("Juego4Screen/$grupo")
+                                    }
+                                }
                             }
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.burbuja_4),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        if (grupoNum != null) {
+                            Image(
+                                painter = painterResource(id = if (grupoNum > 3) R.drawable.burbuja_4 else R.drawable.burbuja_4no),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
 
                         Text(text = "Nivel 4: Juegos",
                             color = Color.White,

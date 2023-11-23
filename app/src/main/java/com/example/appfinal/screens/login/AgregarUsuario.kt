@@ -53,20 +53,11 @@ import com.example.appfinal.viewModel.TarjetasViewModel
 
 @Composable
 fun AgregarUsuario (navController: NavHostController) {
-
+    // Variables
     val tarjetasViewModel: TarjetasViewModel = viewModel()
-
-    val nombre = remember {
-        mutableStateOf("")
-    }
-
-    val password = remember {
-        mutableStateOf("")
-    }
-
-    var grupo = remember {
-        mutableStateOf("1")
-    }
+    var nombre = remember { mutableStateOf("") }
+    var password = remember { mutableStateOf("") }
+    var grupo = remember { mutableStateOf("") }
 
     // Box para poner imagen de fondo
     Box(
@@ -159,9 +150,21 @@ fun AgregarUsuario (navController: NavHostController) {
                 //*************
 
             }
+
+            Column (
+                modifier = Modifier.offset(x = 215.dp, y = 145.dp)
+            ) {
+                Text(text = "Grupo",
+                    color = Color.White,
+                    fontSize = 15.sp)
+
+                dropDownMenu(grupo = grupo.value, changeValueGrupo = { newGrupo ->
+                    grupo.value = newGrupo})
+            }
+
             // Tercera parte: Botones
             Column(
-                modifier = Modifier.offset(x = 205.dp, y = 270.dp)
+                modifier = Modifier.offset(x = 205.dp, y = 250.dp)
             ) {
                 // Agregar Usuario
                 Box(
@@ -170,7 +173,9 @@ fun AgregarUsuario (navController: NavHostController) {
                         .width(300.dp)
                         .clickable {
                             tarjetasViewModel.agregarUsuario(nombre.value, password.value, grupo.value)
-                            navController.navigate("LoginScreen")
+                            nombre.value = ""
+                            password.value = ""
+                            grupo.value = ""
                         }
                 ) {
                     Image(
@@ -180,16 +185,6 @@ fun AgregarUsuario (navController: NavHostController) {
                     )
                 }
 
-            }
-            Column (
-                modifier = Modifier.offset(x = 215.dp, y = 100.dp)
-            ) {
-                Text(text = "Grupo",
-                    color = Color.White,
-                    fontSize = 15.sp)
-
-                dropDownMenu(grupo = grupo.value, changeValueGrupo = { newGrupo ->
-                    grupo.value = newGrupo})
             }
 
         }

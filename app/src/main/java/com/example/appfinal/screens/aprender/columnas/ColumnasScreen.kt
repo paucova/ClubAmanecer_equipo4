@@ -109,7 +109,6 @@ fun ColumnasScreen (
                     ) {
                         if (grupoNum != null) {
                             Image(
-
                                 painter = painterResource(id = if (grupoNum > 1) R.drawable.columna2 else R.drawable.columna2_no),
                                 contentDescription = null,
                                 modifier = Modifier.fillMaxSize()
