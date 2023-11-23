@@ -140,9 +140,7 @@ fun LoginScreen (navController: NavHostController){
                                 navController.navigate("HomeScreen/${userState!!.grupo}")
                             }
                         }
-
                 ) {
-
                     Image(
                         painter = painterResource(id = R.drawable.iniciar_sesion),
                         contentDescription = null,

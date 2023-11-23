@@ -13,10 +13,13 @@ import kotlinx.coroutines.flow.Flow
 interface ImagesDao {
     @Insert
     suspend fun saveImageReference(image: Images)
+
     @Query("Select * from images")
     fun getAllImages(): Flow<List<Images>>
+
     @Query("SELECT * FROM images WHERE category = :category")
     fun getImagesByCategory(category: String): Flow<List<Images>>
+
     @Delete
     suspend fun deleteImage(image: Images)
 }
@@ -25,8 +28,12 @@ interface ImagesDao {
 interface CategoriasDao {
     @Insert
     suspend fun insertCategoria(textEntity: Categorias)
+
     @Query("SELECT * FROM Categorias")
     fun getAllCategorias(): Flow<List<Categorias>>
+
+    @Query("DELETE FROM Categorias WHERE text = :name")
+    suspend fun deleteCategoryByName(name: String)
 }
 
 @Dao
@@ -39,5 +46,4 @@ interface UsersDao {
 
     @Query("SELECT * FROM Users WHERE nombre = :nombre AND contrasena = :contrasena")
     suspend fun encontrarUsuario(nombre: String, contrasena: String): User?
-
 }

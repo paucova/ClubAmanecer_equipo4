@@ -1,7 +1,6 @@
 package com.example.appfinal.screens.aprender
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,20 +13,22 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.appfinal.screens.aprender.categorias.ViewCategoriesScreen
+import com.example.appfinal.staticElements.LoadImages
 import com.example.appfinal.viewModel.TarjetasViewModel
 
 @Composable
-fun AprenderScreen (navController: NavHostController, tarjetasViewModel: TarjetasViewModel, grupo: String) {
+fun AprenderScreen(navController: NavHostController, tarjetasViewModel: TarjetasViewModel, grupo: String) {
     // Establecer el fondo azul claro
     val azulClaro = Color(173, 216, 230)
+
+    // Estado para controlar si hay categorías disponibles
+    val hayCategorias = tarjetasViewModel.obtenerCategorias().isNotEmpty()
 
     Box(
         modifier = Modifier
@@ -64,14 +65,16 @@ fun AprenderScreen (navController: NavHostController, tarjetasViewModel: Tarjeta
                 }
             }
 
-            // Categorías
-            Row {
-                // Llamamos a la función que crea las tarjetas de selección de categorías
-                ViewCategoriesScreen(navController = navController, tarjetasViewModel = tarjetasViewModel, grupo= grupo)
+            // Mostrar el botón "precarcar información" si no hay categorías
+            if (!hayCategorias) {
+                LoadImages()
+            } else {
+                // Categorías
+                Row {
+                    // Llamamos a la función que crea las tarjetas de selección de categorías
+                    ViewCategoriesScreen(navController = navController, tarjetasViewModel = tarjetasViewModel, grupo = grupo)
+                }
             }
-
         }
-
     }
-
 }

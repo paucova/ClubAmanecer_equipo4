@@ -47,7 +47,7 @@ fun BorrarTarjetaScreen(
             .background(color = azulClaro)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-
+            // Botón de regresar
             Button(
                 onClick = {
                     navController.navigate("TarjetasScreen/$grupo") {
@@ -71,6 +71,8 @@ fun BorrarTarjetaScreen(
                     fontWeight = FontWeight.Bold
                 )
             }
+
+            // Ver las tarjetas
             LazyVerticalGrid(
                 columns = GridCells.Fixed(5),
                 contentPadding = PaddingValues(8.dp)
