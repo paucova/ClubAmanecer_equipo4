@@ -1,5 +1,6 @@
 package com.example.appfinal.screens.jugar.juegos
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,11 +23,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.appfinal.R
 import com.example.appfinal.screens.home.noRippleClickable
 import kotlin.random.Random
 
@@ -113,28 +117,41 @@ fun Juego2 (navController: NavHostController, grupo: String){
 data class DraggableImage(
     val id: Int,
     var offset: IntOffset,
-    val color: Color,
-    val radius: Int,
-    var isVisible: Boolean = true
+    val drawableResId: Int,
+    var isVisible: Boolean = true,
+    val size: Int
 )
 
 fun addNewImages(images: MutableList<DraggableImage>, imageCount: Int) {
     images.clear()
 
+    val drawableIds = listOf(
+        R.drawable.burbuja_roja,
+        R.drawable.burbuja_rosa,
+        R.drawable.burbuja_morada,
+        R.drawable.burbuja_azul,
+        R.drawable.burbuja_cian,
+        R.drawable.burbuja_verde,
+        R.drawable.burbuja_bosque,
+        R.drawable.burbuja_amarilla,
+        R.drawable.burbuja_naranja,
+        R.drawable.burbuja_negra
+    )
+
     for (id in 1..imageCount) {
         val xOffset = Random.nextInt(100, 1500)
         val yOffset = Random.nextInt(100, 1000)
-        val color = Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat(), 1f)
-        val radius = Random.nextInt(150, 200) // Radio aleatorio para los círculos
+        val drawableResId = drawableIds.random()
         val isVisible = true
+        val size = Random.nextInt(100, 300)
 
         images.add(
             DraggableImage(
                 id = images.size + 1,
                 offset = IntOffset(xOffset, yOffset),
-                color = color,
-                radius = radius,
-                isVisible = isVisible
+                drawableResId = drawableResId,
+                isVisible = isVisible,
+                size = size
             )
         )
     }
@@ -142,36 +159,56 @@ fun addNewImages(images: MutableList<DraggableImage>, imageCount: Int) {
 
 @Composable
 fun DraggableImage(image: DraggableImage, onDeleteClick: () -> Unit) {
+    val context = LocalContext.current
+
     Box(
         modifier = Modifier
             .offset { image.offset }
-            .size(image.radius.dp)
+            .size(width = image.size.dp, height = image.size.dp)
             .fillMaxSize()
-            .background(color = image.color, shape = CircleShape)
             .noRippleClickable {
                 image.isVisible = !image.isVisible
+                audioBurbuja(context)
                 onDeleteClick()
             }
     ) {
-        // Agrega el contenido de la imagen aquí, si es necesario
+        // Load the image using the drawable resource ID
+        Image(
+            painter = painterResource(id = image.drawableResId),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 
 fun generateImages(): MutableList<DraggableImage> {
     val images = mutableListOf<DraggableImage>()
 
+    val drawableIds = listOf(
+        R.drawable.burbuja_roja,
+        R.drawable.burbuja_rosa,
+        R.drawable.burbuja_morada,
+        R.drawable.burbuja_azul,
+        R.drawable.burbuja_cian,
+        R.drawable.burbuja_verde,
+        R.drawable.burbuja_bosque,
+        R.drawable.burbuja_amarilla,
+        R.drawable.burbuja_naranja,
+        R.drawable.burbuja_negra
+    )
+
     for (id in 1..10) {
         val xOffset = Random.nextInt(100, 2000)
         val yOffset = Random.nextInt(100, 1000)
-        val color = Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat(), 1f)
-        val radius = Random.nextInt(150, 200)
+        val drawableResId = drawableIds.random()
+        val size = Random.nextInt(100, 300)
 
         images.add(
             DraggableImage(
                 id = id,
                 offset = IntOffset(xOffset, yOffset),
-                color = color,
-                radius = radius
+                drawableResId = drawableResId,
+                size = size
             )
         )
     }

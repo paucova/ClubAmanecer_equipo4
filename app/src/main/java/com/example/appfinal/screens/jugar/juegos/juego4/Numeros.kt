@@ -22,12 +22,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.appfinal.screens.home.noRippleClickable
+import com.example.appfinal.screens.jugar.juegos.audioBurbuja
 import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.random.Random
@@ -169,6 +171,8 @@ fun addNewImages3(images: MutableList<DraggableImage3>, imageCount: Int, minDist
 
 @Composable
 fun DraggableImage3(image: DraggableImage3, onDeleteClick: () -> Unit) {
+    val context = LocalContext.current
+
     Box(
         modifier = Modifier
             .offset { image.offset }
@@ -177,6 +181,7 @@ fun DraggableImage3(image: DraggableImage3, onDeleteClick: () -> Unit) {
             .background(color = image.color, shape = CircleShape)
             .noRippleClickable {
                 image.isVisible = !image.isVisible
+                audioBurbuja(context)
                 onDeleteClick()
             }
     ) {
