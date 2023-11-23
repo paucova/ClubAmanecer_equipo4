@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.appfinal.R
 import com.example.appfinal.screens.home.noRippleClickable
+import com.example.appfinal.screens.jugar.juegos.juego4.audioYay2
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 @Composable
@@ -44,6 +47,7 @@ fun Juego2 (navController: NavHostController, grupo: String){
     var visibleImages by remember { mutableStateOf(images.filter { it.isVisible }) }
     var deletedImages by remember { mutableStateOf(mutableListOf<DraggableImage>()) }
     var deletedImageCount by remember { mutableStateOf(0) }
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -103,12 +107,23 @@ fun Juego2 (navController: NavHostController, grupo: String){
                         deletedImages.add(image)
                         deletedImageCount++
                         visibleImages = visibleImages.filter { it != image }
+
+                        audioBurbuja(context)
+
+                        if (visibleImages.isEmpty()){
+                            // Llamar a la función audio para reproducir el sonido
+                            audioYay2(context)
+                        }
                     }
                 }
             } else {
-                val randomImageCount = Random.nextInt(1, 11) // Genera un número aleatorio entre 1 y 20
-                addNewImages(images, randomImageCount)
-                visibleImages = images
+                LaunchedEffect(Unit) {
+                    delay(1500)
+                    val randomImageCount =
+                        Random.nextInt(1, 11) // Genera un número aleatorio entre 1 y 20
+                    addNewImages(images, randomImageCount)
+                    visibleImages = images
+                }
             }
         }
     }
@@ -159,8 +174,6 @@ fun addNewImages(images: MutableList<DraggableImage>, imageCount: Int) {
 
 @Composable
 fun DraggableImage(image: DraggableImage, onDeleteClick: () -> Unit) {
-    val context = LocalContext.current
-
     Box(
         modifier = Modifier
             .offset { image.offset }
@@ -168,7 +181,6 @@ fun DraggableImage(image: DraggableImage, onDeleteClick: () -> Unit) {
             .fillMaxSize()
             .noRippleClickable {
                 image.isVisible = !image.isVisible
-                audioBurbuja(context)
                 onDeleteClick()
             }
     ) {

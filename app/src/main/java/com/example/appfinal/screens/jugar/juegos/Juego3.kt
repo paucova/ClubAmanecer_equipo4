@@ -375,7 +375,7 @@ private fun Drag() {
         Log.d("imagen", "Entro")
 
         // Llamar a la función audio para reproducir el sonido
-        audio(LocalContext.current)
+        audioYay(LocalContext.current)
 
         Box(
             //modifier = Modifier.fillMaxSize()
@@ -392,7 +392,7 @@ private fun Drag() {
 }
 
 @Composable
-fun audio(context: Context) {
+fun audioYay(context: Context) {
     var audioPlayed by remember { mutableStateOf(false) }
     val mediaPlayer: MediaPlayer = remember { MediaPlayer.create(context, R.raw.yay) }
 

@@ -1,5 +1,7 @@
 package com.example.appfinal.screens.jugar.juegos.juego4
 
+import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,13 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +36,9 @@ import androidx.navigation.NavHostController
 import com.example.appfinal.R
 import com.example.appfinal.screens.home.noRippleClickable
 import com.example.appfinal.screens.jugar.juegos.audioBurbuja
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.random.Random
@@ -48,6 +54,8 @@ fun Numeros(navController: NavHostController, grupo: String) {
     var deletedImages by remember { mutableStateOf(mutableListOf<DraggableImage3>()) }
     var deletedImageCount by remember { mutableStateOf(0) }
     var currentNumber by remember { mutableStateOf(1) }
+
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -110,15 +118,27 @@ fun Numeros(navController: NavHostController, grupo: String) {
                         deletedImageCount++
                         visibleImages = visibleImages.filter { it != image }
                         currentNumber++
+
+                        audioBurbuja(context)
                     }
+
+                    if (visibleImages.isEmpty()){
+                        // Llamar a la función audio para reproducir el sonido
+                        audioYay2(context)
+                    }
+
                 }
             }
         } else {
             currentNumber = 1 // Restablecer el número actual a 1
-            val randomImageCount = Random.nextInt(1, 11)
-            val minDistance = 250 // Define la distancia mínima aquí
-            addNewImages3(images, randomImageCount, minDistance)
-            visibleImages = images.sortedBy { it.number }
+            // Retraso de 2 segundos antes de generar nuevas imágenes
+            LaunchedEffect(Unit) {
+                delay(1500)
+                val randomImageCount = Random.nextInt(1, 11)
+                val minDistance = 250 // Define la distancia mínima aquí
+                addNewImages3(images, randomImageCount, minDistance)
+                visibleImages = images.sortedBy { it.number }
+            }
         }
     }
 }
@@ -200,7 +220,6 @@ fun DraggableImage3(image: DraggableImage3, onDeleteClick: () -> Unit) {
             .fillMaxSize()
             .noRippleClickable {
                 image.isVisible = !image.isVisible
-                audioBurbuja(context)
                 onDeleteClick()
             }
     ) {
@@ -253,4 +272,13 @@ fun generateImages3(): MutableList<DraggableImage3> {
     }
 
     return images
+}
+
+fun audioYay2(context: Context) {
+    GlobalScope.launch {
+        delay(500)
+
+        val mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.yay)
+        mediaPlayer.start()
+    }
 }

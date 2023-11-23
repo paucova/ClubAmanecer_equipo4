@@ -139,6 +139,6 @@ fun getBitmap2(name: String, category: String?, text: String, filepath: Int, con
 }
 
 fun audioBurbuja(context: Context) {
-    val mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.burbuja)
+    val mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.burbuja2)
     mediaPlayer.start()
 }
